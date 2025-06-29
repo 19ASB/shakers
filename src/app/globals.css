@@ -35,6 +35,43 @@ a {
   text-decoration: none;
 }
 
+/* Oculta todos los checkboxes internos de PrimeReact MultiSelect */
+.no-default-checkbox .p-checkbox {
+  display: none !important;
+}
+
+/* (opcional) oculta la cabecera "Seleccionar todo" */
+.no-default-checkbox .p-multiselect-header {
+  display: none !important;
+}
+
+.no-default-checkbox.p-multiselect-panel {
+  z-index: 9999 !important;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #f0f0f0;   /* por encima de otros overlays */
+}
+
+.no-default-checkbox .p-multiselect-items-wrapper {
+  max-height: 260px;          /* scroll si hay muchas opciones */
+  overflow-y: auto;
+}
+
+.p-dropdown-panel{
+  z-index: 9999 !important;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #f0f0f0;   /* por encima de otros overlays */
+}
+
+.p-dropdown-items-wrapper{
+  padding: 5px 5px 5px 5px;
+}
+
+.p-focus{
+  padding-bottom: 5px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
