@@ -22,17 +22,6 @@ export default function AppBarComponent(){
                     <Avatar variant="square" alt="Perfil" src="" sx={{ width: 38, height: 38, marginLeft: 2 }} />
                 </Toolbar>
             </AppBar>
-            
-            <Box component="div" sx={{ p: 1, paddingTop: 5, paddingRight: 5}}>
-                <Stack direction="row" spacing={3} sx={{ justifyContent: "flex-end" }}>
-                    <Button variant="outlined" startIcon={<HiFilter/>} sx={{ color: "#033028", border: "none"}}>
-                        Filtrar
-                    </Button>
-                    <Button variant="outlined" startIcon={<FaArrowDown />} sx={{color: "#033028", border: "1px solid #033028" }}>
-                        Ordenar
-                    </Button>
-                </Stack>
-            </Box>
         </>
     );
 }

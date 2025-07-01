@@ -3,9 +3,12 @@
 import AppBarComponent from "@/components/appBar";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import DialogComponent from "@/components/dialog";
-
+import CardComponent from "@/components/card";
+import CardDetails from "@/components/cardDetails";
+import { HiFilter } from "react-icons/hi";
+import { FaArrowDown } from "react-icons/fa6";
 
 export default function Home() {
   const [visible, setShowMain] = useState(false);
@@ -31,7 +34,24 @@ export default function Home() {
                 exit={{ opacity: 0}}
                 transition={{ duration: 0.5 }}
               >
-                <DialogComponent/>
+              <Box component="div" sx={{ p: 1, paddingTop: 5, paddingRight: 5, justifyContent: "flex-end"}}>
+                <Stack direction="row" spacing={3} sx={{ justifyContent: "flex-end" }}>
+                    <Button variant="outlined" startIcon={<HiFilter/>} sx={{ color: "#033028", border: "none"}}>
+                        Filtrar
+                    </Button>
+                    <Button variant="outlined" startIcon={<FaArrowDown />} sx={{color: "#033028", border: "1px solid #033028" }}>
+                        Ordenar
+                    </Button>
+                </Stack>
+              </Box>
+                {/*<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <label style={{ fontSize: "12px", fontWeight: "400", color: "#033028", padding: "5px", backgroundColor: "#EDF7F6", alignSelf: "flex-start", width: "fit-content", borderRadius: "4px" }}>
+                    € ¡Gana 1500€ por referir!
+                  </label>
+                  <CardComponent />
+                </div>
+                {/*<DialogComponent/> 
+                <CardDetails /> */}
               </motion.div>
             )}
           </AnimatePresence>
