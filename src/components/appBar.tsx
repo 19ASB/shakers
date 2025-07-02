@@ -1,9 +1,6 @@
-import { AppBar, Avatar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, IconButton, Toolbar, Typography } from "@mui/material";
 import { TbMessageCircleFilled } from "react-icons/tb";
 import { IoMdNotifications } from "react-icons/io";
-import { HiFilter } from "react-icons/hi";
-import { FaArrowDown } from "react-icons/fa6";
-import { Box, Stack } from "@mui/system";
 
 export default function AppBarComponent(){
     return(

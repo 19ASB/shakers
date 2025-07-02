@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "primereact/Card";
 import { Avatar } from "@mui/material";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 import projects from "../data/sample_40_projects.json";
 import staticData from "../data/Static_data.json";
@@ -33,6 +34,10 @@ type Project = {
 };
 
 const CardComponet = ({ project }: { project: Project }) => {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push(`/cardDetails/${project.id}`);
+    }
     const{
         title,
         organization: { name: orgName, logo, industry },
@@ -57,14 +62,14 @@ const CardComponet = ({ project }: { project: Project }) => {
                             {allSpecialties.map((specId) => specialtiesMap[specId]).join(" ")} | { industryMap[industry] }
                         </label>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                            {allSkills.map((skillId) => (
-                                <label key={skillId} style={{ fontSize: "12px", fontWeight: 400, color: "#181B1A", backgroundColor: "#F4F5F5", padding: "5px 8px 5px 8px" }}>
+                            {allSkills.map((skillId, index) => (
+                                <label key={`${skillId}-${index}`} style={{ fontSize: "12px", fontWeight: 400, color: "#181B1A", backgroundColor: "#F4F5F5", padding: "5px 8px 5px 8px" }}>
                                     {skillsMap[skillId]}
                                 </label>
                             ))}
                         </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", padding: "10px 10px 10px 10px", justifyContent: "center", alignItems: "center", width: "10%", margin: "0 auto", borderInlineStart: "1px solid #E0E0E0" }}>
+                    <div style={{ display: "flex", flexDirection: "column", padding: "10px 10px 10px 10px", justifyContent: "center", alignItems: "center", width: "10%", margin: "0 auto", borderInlineStart: "1px solid #E0E0E0" }} onClick={handleClick}>
                         <MdKeyboardDoubleArrowRight id="saberMas" style={{ color: "#033028", fontSize: "30px", fontWeight: "bold" }} />
                     </div>
                 </div>
@@ -85,7 +90,7 @@ export default function ProjectCards() {
 
 const cardStyle: React.CSSProperties = {
     height: "100%",
-    width: "70vw",
+    width: "90vw",
     border: "1px solid #E0E0E0",
     borderRadius: "8px",
 }

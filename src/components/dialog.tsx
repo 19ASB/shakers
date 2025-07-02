@@ -4,49 +4,69 @@ import { Typography } from "@mui/material";
 import { Values, SelectsComponent} from "./selects";
 import { RadioButton } from 'primereact/radiobutton';
 import { Button } from "@mui/material";
+import data from "../data/Static_data.json";
 
-export default function DialogComponent() {
-    const [visible, setVisible] = useState(true);
+type Option = {
+    id: number;
+    name: string;
+};
 
-    const [techs, setTechs] = useState<Values[]>([]);
-    const [roles, setRoles] = useState<Values[]>([]);
-    const [levels, setLevels] = useState<Values[]>([]);
-    const [statuses, setStatuses] = useState<Values[]>([]);
+type GroupedOptions = {
+    label: string;
+    items: Option[];
+};
 
-    /* datos de ejemplo */
-    const techOptions: Values[] = [
-        { id: 1, name: 'React' },
-        { id: 2, name: 'Vue' },
-        { id: 3, name: 'Angular' },
-    ];
+type Props ={
+    visible: boolean;
+    onHide: () => void;
+    selectedSkills: Values[];
+    setSelectedSkills: React.Dispatch<React.SetStateAction<Values[]>>;
+    selectedSpecialties: Values[];
+    setSelectedSpecialties: React.Dispatch<React.SetStateAction<Values[]>>;
+    selectedIndustries: Values[];
+    setSelectedIndustries: React.Dispatch<React.SetStateAction<Values[]>>;
+    onApplyFilters: () => void;
+}
+const { specialties, skills, categories, industries, subcategories } = data as Record<string, Option[]>;
 
-    const roleOptions: Values[] = [
-        { id: 1, name: 'Frontend' },
-        { id: 2, name: 'Backend' },
-        { id: 3, name: 'Full Stack' },
-    ];
+export default function DialogComponent({ visible, onHide, selectedSkills, setSelectedSkills, selectedSpecialties, setSelectedSpecialties, selectedIndustries, setSelectedIndustries, onApplyFilters,}: Props) {
+    const [selectedCategories, setSelectedCategories] = useState<Values[]>([]);
 
-    const levelOptions: Values[] = [
-        { id: 1, name: 'Junior' },
-        { id: 2, name: 'Mid' },
-        { id: 3, name: 'Senior' },
-    ];
-
-    const statusOptions: Values[] = [
-        { id: 1, name: 'En curso' },
-        { id: 2, name: 'Pendiente' },
-        { id: 3, name: 'Completado' },
-    ];
+    const groups: {
+        title: string;
+        options: Option[];
+        state: [Values[], React.Dispatch<React.SetStateAction<Values[]>>];
+    }[] = [
+        {
+            title: "Especialidades",
+            options: specialties,
+            state: [selectedSpecialties, setSelectedSpecialties]        
+        },
+        {
+            title: "Habilidades",
+            options: skills,
+            state: [selectedSkills, setSelectedSkills]
+        },
+        {
+            title: "Industrias",
+            options: industries,
+            state: [selectedIndustries, setSelectedIndustries]
+        },
+        {
+            title: "Categorías",
+            options: categories,
+            state: [selectedCategories, setSelectedCategories]
+        }
+    ]
 
     return(
-        <Dialog visible={visible} position="center" style={{ minWidth: "340px", width: "45%" }} onHide={() => setVisible(false)}>
+        <Dialog appendTo="self" visible={visible} onHide={onHide} position="center" style={{ minWidth: "340px", width: "45%", backgroundColor: "white", padding: "1rem", borderRadius: "8px" }} maskStyle={{ backgroundColor: 'rgba(0,0,0,0.5)' }} pt={{ root: { style: { zIndex: 1200 } } }} modal>
             <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
                 Filtrar Proyectos
             </Typography>
-            <SelectsComponent title="Especialidades" options={roleOptions} state={[roles, setRoles]}/>
-            <SelectsComponent title="Habilidades" options={techOptions} state={[techs, setTechs]}/>
-            <SelectsComponent title="Tipo de proyecto" options={levelOptions} state={[levels, setLevels]}/>
-            <SelectsComponent title="Industria" options={statusOptions} state={[statuses, setStatuses]}/>
+            {groups.map(({ title, options, state }) => (
+                <SelectsComponent key={title} title={title} options={options} state={state} />
+            ))}
             <div>
                 <Typography component="div" sx={{ width: "50%", fontSize: "16px", color: "#181B1A", marginBottom: 1 }}>Ordenar por</Typography>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
@@ -64,10 +84,10 @@ export default function DialogComponent() {
             </div>
             <div style={{ marginTop: "1rem" }}>
                 <div style={{ display: "flex", flexDirection: "row", alignContent: "center", marginLeft: "2rem", marginRight: "2rem", gap: "2rem" }}>
-                    <Button style={{ width: "40%", backgroundColor: "#FFFFFF", color: "#CA4810" }}>
+                    <Button style={{ width: "40%", backgroundColor: "#FFFFFF", color: "#CA4810"}} onClick={() => { setSelectedSkills([]); setSelectedSpecialties([]); setSelectedIndustries([]);}}>
                         Eliminar filtros
                     </Button>
-                    <Button style={{ width: "40%", backgroundColor: "#033028", color: "#FFFFFF" }}>
+                    <Button style={{ width: "40%", backgroundColor: "#033028", color: "#FFFFFF" }} onClick={onApplyFilters}>
                         Filtrar
                     </Button>
                 </div>

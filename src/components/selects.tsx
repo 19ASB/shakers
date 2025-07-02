@@ -37,7 +37,7 @@ const select: React.CSSProperties = {
 };
 
 export function SelectsComponent({title, options, state}: SelectsProps) {
-    const [selectedValues, setSelectedValues] = useState<Values[]>([]);
+    const [selectedValues, setSelectedValues] = state;
     const [selectedOption, setSelectedOption] = useState({ name: "O" });
     const option = [
         { name: "O" },
