@@ -13,9 +13,10 @@ export interface Values{
 }
 
 interface SelectsProps {
-  title: string;
-  options: Values[];
-  state: [Values[], React.Dispatch<React.SetStateAction<Values[]>>];
+    title: string;
+    options: Values[];
+    state: [Values[], React.Dispatch<React.SetStateAction<Values[]>>];
+    onOperatorChange?: (op: "O" | "Y") => void;
 }
 
 const multiSelect: React.CSSProperties = {
@@ -36,13 +37,21 @@ const select: React.CSSProperties = {
     marginBottom: "1rem",
 };
 
-export function SelectsComponent({title, options, state}: SelectsProps) {
+export function SelectsComponent({title, options, state, onOperatorChange}: SelectsProps) {
     const [selectedValues, setSelectedValues] = state;
     const [selectedOption, setSelectedOption] = useState({ name: "O" });
     const option = [
         { name: "O" },
         { name: "Y" },
     ]
+    const [operator, setOperator] = useState<"O" | "Y">("O");
+
+    /* cuando cambie O/Y */
+    const handleOp = (op: "O" | "Y") => {
+        setOperator(op);
+        onOperatorChange?.(op); // avisa al padre solo de este grupo
+    };
+
     const optionTemplate = (option: Values) => {
         const isChecked = selectedValues.some((v) => v.id === option.id);
 
@@ -88,7 +97,7 @@ export function SelectsComponent({title, options, state}: SelectsProps) {
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "2rem" }}>
                 <MultiSelect appendTo={document.body} style={multiSelect} value={selectedValues} onChange={(e: MultiSelectChangeEvent) => setSelectedValues(e.value)} options={options}
                     optionLabel='name' placeholder='Busca y añade' itemTemplate={optionTemplate} selectedItemTemplate={selectTemplate} panelClassName="no-default-checkbox"/>
-                <Dropdown value={selectedOption} onChange={(e) => setSelectedOption(e.value)} options={option} optionLabel="name" style={select} panelClassName="p-dropdown-panel p-dropdown-items-wrapper p-focus"/>
+                <Dropdown value={selectedOption} options={option} optionLabel="name" style={select} panelClassName="p-dropdown-panel p-dropdown-items-wrapper p-focus"/>
             </div>
         </div>
     )

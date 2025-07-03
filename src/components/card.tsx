@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "primereact/Card";
 import { Avatar } from "@mui/material";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import projects from "../data/sample_40_projects.json";
 import staticData from "../data/Static_data.json";
+import { Values } from "./selects";
 
 const specialtiesMap = Object.fromEntries(
     staticData.specialties.map((specialty) => [specialty.id, specialty.name])
@@ -44,7 +45,6 @@ const CardComponet = ({ project }: { project: Project }) => {
         positions,
     } = project;
 
-    // Flatten all skills from all positions
     const allSkills = positions?.flatMap(pos => pos.skills) || [];
     const allSpecialties = positions?.flatMap(pos => pos.specialties) || [];
 
@@ -78,10 +78,69 @@ const CardComponet = ({ project }: { project: Project }) => {
     )
 }
 
-export default function ProjectCards() {
+type CardsProps = {
+    selectedSpecialties: Values[];
+    specialtiesOp: "O" | "Y";
+    selectedSkills: Values[];
+    skillsOp: "O" | "Y";
+    selectedIndustries: Values[];
+    industriesOp: "O" | "Y";
+    order: "masReciente" | "masAntiguo";
+};
+
+export default function ProjectCards(props: CardsProps) {
+    const {
+        selectedSpecialties, specialtiesOp,
+        selectedSkills,     skillsOp,
+        selectedIndustries, industriesOp,
+        order
+    } = props;
+
+    const getTime = (p: Project) => {
+        const raw = (p as any).publishedAt
+                ?? (p as any).published_at
+                ?? (p as any).createdAt
+                ?? null;
+        return raw ? new Date(raw).getTime() : 0;
+    };
+
+    const matchGroup = (
+        projectValues: (string | number)[],
+        selectedArr: Values[],
+        op: "O" | "Y"
+    ) => {
+        if (!selectedArr.length) return true; // nada seleccionado ⇒ siempre pasa
+        const ids = selectedArr.map(v => v.id);
+        return op === "O"
+        ? ids.some(id => projectValues.includes(id))      // “O” (OR)
+        : ids.every(id => projectValues.includes(id));    // “Y” (AND)
+    };
+    const filtered = React.useMemo(() => {
+        return projects
+        .filter(p => p.status === "PUBLISHED")
+        .filter(p => {
+            const specs  = p.positions.flatMap(pos => pos.specialties);
+            const skills = p.positions.flatMap(pos => pos.skills);
+            const ind    = [p.organization.industry];       // array de 1 para reusar matchGroup
+
+            return (
+            matchGroup(specs,  selectedSpecialties, specialtiesOp) &&
+            matchGroup(skills, selectedSkills,     skillsOp)      &&
+            matchGroup(ind,    selectedIndustries, industriesOp)
+            );
+        })
+        .sort((a, b) => {
+            return order === "masReciente" ? getTime(b) - getTime(a) : getTime(a) - getTime(b)
+        });
+    }, [
+        selectedSpecialties, specialtiesOp,
+        selectedSkills, skillsOp,
+        selectedIndustries, industriesOp,
+        order
+    ]);
     return(
         <div style={{ display: "flex", flexDirection: "column", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1rem"}}>
-            { projects.filter((p) => p.status === "PUBLISHED").map((project) => (
+            { filtered.map(project =>(
                 <CardComponet key={project.id} project={project} />
             ))}
         </div>

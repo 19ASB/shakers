@@ -1,5 +1,9 @@
+import AppBarComponent from '@/components/appBar';
 import CardDetails from '@/components/cardDetails';
 
 export default function CardDetailsPage() {
-  return <CardDetails />;
+  return(
+    <><AppBarComponent /><CardDetails /></>
+  );
+  
 }
