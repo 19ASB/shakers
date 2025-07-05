@@ -16,6 +16,7 @@ interface SelectsProps {
     title: string;
     options: Values[];
     state: [Values[], React.Dispatch<React.SetStateAction<Values[]>>];
+    operator: "O" | "Y";
     onOperatorChange?: (op: "O" | "Y") => void;
 }
 
@@ -37,20 +38,12 @@ const select: React.CSSProperties = {
     marginBottom: "1rem",
 };
 
-export function SelectsComponent({title, options, state, onOperatorChange}: SelectsProps) {
+export function SelectsComponent({title, options, state, operator, onOperatorChange}: SelectsProps) {
     const [selectedValues, setSelectedValues] = state;
-    const [selectedOption, setSelectedOption] = useState({ name: "O" });
-    const option = [
-        { name: "O" },
-        { name: "Y" },
-    ]
-    const [operator, setOperator] = useState<"O" | "Y">("O");
+    const option = [{name: "O"}, {name: "Y"}];
 
     /* cuando cambie O/Y */
-    const handleOp = (op: "O" | "Y") => {
-        setOperator(op);
-        onOperatorChange?.(op); // avisa al padre solo de este grupo
-    };
+    const handleOp = (op : "O" | "Y") => onOperatorChange?.(op);
 
     const optionTemplate = (option: Values) => {
         const isChecked = selectedValues.some((v) => v.id === option.id);
@@ -94,11 +87,18 @@ export function SelectsComponent({title, options, state, onOperatorChange}: Sele
             <Typography component="div" sx={{ width: "50%", fontSize: "16px", color: "#181B1A", marginBottom: 1 }}>
                 { title }
             </Typography>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "2rem" }}>
+            <div style={divSelect}>
                 <MultiSelect appendTo={document.body} style={multiSelect} value={selectedValues} onChange={(e: MultiSelectChangeEvent) => setSelectedValues(e.value)} options={options}
                     optionLabel='name' placeholder='Busca y añade' itemTemplate={optionTemplate} selectedItemTemplate={selectTemplate} panelClassName="no-default-checkbox"/>
-                <Dropdown value={selectedOption} options={option} optionLabel="name" style={select} panelClassName="p-dropdown-panel p-dropdown-items-wrapper p-focus"/>
+                <Dropdown value={{name: operator}} options={option} optionLabel="name" onChange={(e) => handleOp(e.value.name as "O" | "Y")} style={select} panelClassName="p-dropdown-panel p-dropdown-items-wrapper p-focus"/>
             </div>
         </div>
     )
+}
+
+const divSelect: React.CSSProperties = { 
+    display: "flex", 
+    flexDirection: "row", 
+    alignItems: "center", 
+    gap: "2rem" 
 }

@@ -1,6 +1,7 @@
 import { AppBar, Avatar, IconButton, Toolbar, Typography } from "@mui/material";
 import { TbMessageCircleFilled } from "react-icons/tb";
 import { IoMdNotifications } from "react-icons/io";
+import fotoPerfil from '../assets/foto_perfil.jpg';
 
 export default function AppBarComponent(){
     return(
@@ -16,7 +17,7 @@ export default function AppBarComponent(){
                     <IconButton>
                         <IoMdNotifications size={24} color="black" />
                     </IconButton>
-                    <Avatar variant="square" alt="Perfil" src="" sx={{ width: 38, height: 38, marginLeft: 2 }} />
+                    <Avatar variant="square" alt="Perfil" src={fotoPerfil.src} sx={{ width: 38, height: 38, marginLeft: 2 }} />
                 </Toolbar>
             </AppBar>
         </>
